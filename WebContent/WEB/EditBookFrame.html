@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑图书</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/mydataTable.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/jquery.dataTables.css" rel="stylesheet">
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var administratorAccountName = decodeURI(GetQueryString("operate_account_name"));
+			//alert("AccountName:" + administratorAccountName);
+			var table = jQuery("#edit_book_table").DataTable({
+				"ajax":{
+					"type":"post",
+					"url":"searchBookAction", 
+					"data":{
+						"mode":"nothing",
+						"search_words":""
+					},
+					"error":function(jQXHR){ alert("错误码:" + jQXHR.status); }
+				},
+				"columns": [
+					{ "data": "bookId", "title": "数据库编号" },
+					//如何获取图片? 
+					{ "data": "bookIsbn", "title": "ISBN" },
+			   		{ "data": "bookName","title": "书名" },
+			       	{ "data": "bookAuthor","title": "作者" }, 
+			       	{ "data": "bookPublishCompany","title": "出版社" },  
+			       	{ "data": "bookPosition","title": "存放位置" }, 
+			       	{ "data": "bookAverageScore","title": "评分" }, 
+			       	{ "data": null,"title":"操作","defaultContent": "<button id='detail_btn' class='detail_btn' type='button'>更多</button><button id='delete_btn' class='delete_btn' type='button'>删除</button>"},
+				],
+				"language": {
+			    	"sProcessing": "处理中...",
+			    	"sLengthMenu": "每页显示数量  _MENU_ ",
+			    	"sZeroRecords": "没有匹配结果",
+			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "在结果中过滤:",
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "表中数据为空",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			        	"sFirst": "首页",
+			             "sPrevious": "上页",
+			             "sNext": "下页",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+				},
+			    "bFilter": true, //开关，是否启用客户端过滤器 
+			});
+			
+			jQuery("#edit_book_table tbody").on("click",".delete_btn",function(){
+				if (!confirm("确认删除吗?"))
+				{
+					return;
+				}
+				
+				var deleteBookIsbn = jQuery(this).parents("tr").children("td:eq(1)").text();
+				
+				jQuery.ajax({
+					type:"POST",
+					url:"deleteBookAction",
+					data:{
+						"book_isbn":deleteBookIsbn
+					},
+					success:function(data){
+						if (data.info == "DeleteSuccess")
+						{
+							alert("删除完成");
+							window.location.href = "EditBookFrame.html?operate_account_name=" + administratorAccountName;
+						}
+						else if (data.info == "DeleteError")
+						{ 
+							alert("删除出错");
+						}
+						else if (data.info == "BookNotExisted")
+						{
+							alert("此书不存在");
+						}
+						else
+						{
+							alert("执行删除操作时出错");
+						}
+					},
+					error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+				});
+			}); 
+			
+			jQuery("#edit_book_table tbody").on("click",".detail_btn",function(){
+				var detailBookIsbn = jQuery(this).parents("tr").children("td:eq(1)").text();
+				
+				window.open("BookDetailFrame.html?operate_account_name=" + administratorAccountName + "&book_isbn=" + detailBookIsbn,"图书详细信息");
+			});
+			
+			jQuery("#search_btn").click(function(){
+				var searchWords = jQuery("#search_input").val();
+				if (searchWords == "")
+				{
+					alert("输入框为空"); 
+					return;
+				}
+				var mode = jQuery("#mode_select option:selected").val();
+				var param = {
+						"mode":mode,
+						"search_words":searchWords
+				    };
+				
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+				//alert("test");
+			});
+			
+			jQuery("#search_all_btn").click(function(){
+				var param = {
+						"mode":"all",
+						"search_words":""
+				    };
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+			});
+			
+			jQuery("#clear_input").click(function(){
+				jQuery("#search_input").val("");
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+		<button id="search_all_btn">展开所有图书</button>&nbsp;&nbsp;&nbsp;
+		<select id="mode_select">
+  				<option value="isbn">请输入 图书ISBN:</option>
+				<option value="name">请输入 图书名:</option>
+				<option value="author">请输入 作者:</option>
+				<option value="company">请输入  出版社:</option>
+				<option value="key">请输入 关键字:</option>
+				<option value="most">在以上类别中搜索:</option>
+		</select>&nbsp;
+		<input id="search_input" type="text" size="22" maxlength="20">&nbsp;
+		<button id="search_btn">查询</button>&nbsp;<button id="clear_input">清空输入框</button>
+	</div>
+	<div style="background-color: #f63e74;width: 100%;height: 2px;margin:3px;"></div>
+	<table id="edit_book_table" class="display">
+
+	</table>
+</body>
+</html>

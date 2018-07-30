@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"> 
+
+	<!-- 定义数据源的信息 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass">  
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="jdbcUrl">
+			<value>jdbc:mysql://127.0.0.1:3306/librarydatabase</value>
+		</property>
+		<property name="user">
+			<value>yuancheng</value> 
+		</property>
+		<property name="password"> 
+			<value>1111</value>
+		</property>
+		<property name="maxPoolSize">
+			<value>200</value>
+		</property>
+		<property name="minPoolSize">
+			<value>1</value>
+		</property>
+		<property name="initialPoolSize">
+			<value>1</value>
+		</property> 
+		<property name="maxIdleTime">
+			<value>60</value>
+		</property>
+	</bean>
+	
+	
+
+	<!--定义Hibernate的SessionFactory -->
+	<!-- SessionFactory使用的数据源为上面的数据源 -->
+	<!-- 指定了Hibernate的映射文件和配置信息 -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSource" />
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/andzj/library/bean/AdministratorAccount.hbm.xml</value>
+				<value>com/andzj/library/bean/BookInformation.hbm.xml</value>
+				<value>com/andzj/library/bean/BorrowInformation.hbm.xml</value>
+				<value>com/andzj/library/bean/BorrowHistoryInformation.hbm.xml</value>
+				<value>com/andzj/library/bean/CommentInformation.hbm.xml</value>
+				<value>com/andzj/library/bean/ScoreInformation.hbm.xml</value>
+				<value>com/andzj/library/bean/UserAccount.hbm.xml</value>
+				<value>com/andzj/library/bean/FeedbackInformation.hbm.xml</value>
+			</list>
+		</property> 
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+		        <prop key="hibernate.show_sql">true</prop>
+		        <prop key="hibernate.format_sql">true</prop>
+		        <prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 数据访问 -->
+	<bean id="administratorDao" class="com.andzj.library.dao.impl.AdministratorDaoImpl" scope="prototype">
+		<property name="sessionFactory" ref="sessionFactory">
+		</property>
+	</bean>
+	
+	<bean id="bookDao" class="com.andzj.library.dao.impl.BookDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="borrowDao" class="com.andzj.library.dao.impl.BorrowDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="borrowHistoryDao" class="com.andzj.library.dao.impl.BorrowHistoryDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="commentDao" class="com.andzj.library.dao.impl.CommentDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="scoreDao" class="com.andzj.library.dao.impl.ScoreDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="userDao" class="com.andzj.library.dao.impl.UserDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="feedbackDao" class="com.andzj.library.dao.impl.FeedbackDaoImpl" scope="prototype">
+	    <property name="sessionFactory" ref="sessionFactory">
+	        
+	    </property>
+	</bean>
+
+
+	<!--业务逻辑类 -->
+	<bean id="administratorService" class="com.andzj.library.service.impl.AdministratorServiceImpl">
+		<property name="administratorDao" ref="administratorDao">
+		    
+		</property>
+		<property name="bookDao" ref="bookDao">
+		    
+		</property>
+		<property name="borrowDao" ref="borrowDao">
+		    
+		</property>
+		<property name="borrowHistoryDao" ref="borrowHistoryDao">
+		    
+		</property>
+		<property name="commentDao" ref="commentDao">
+		    
+		</property>
+		<property name="scoreDao" ref="scoreDao">
+		    
+		</property>
+		<property name="userDao" ref="userDao">
+		    
+		</property>
+		
+		<property name="feedbackDao" ref="feedbackDao">
+		    
+		</property>
+		
+	</bean>
+
+	<!-- Action类 -->
+	<!--***********************管理员相关****************************** -->
+	<bean id="addAdministratorAccountAction" class="com.andzj.library.action.AddAdministratorAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="administratorLoginAction" class="com.andzj.library.action.AdministratorLoginAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="deleteAdminAccountAction" class="com.andzj.library.action.DeleteAdminAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	
+	<bean id="updateAdminAccountAction" class="com.andzj.library.action.UpdateAdminAccountAction">
+	 	<property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="searchAdminAccountAction" class="com.andzj.library.action.SearchAdminAccountAction">
+		<property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	 
+	<bean id="checkAdminAccountExistedAction" class="com.andzj.library.action.CheckAdminAccountExistedAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	
+	<!--*************************图书相关****************************-->
+	<bean id="uploadBookImageAction"  class="com.andzj.library.action.UploadBookImageAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="addBookAction" class="com.andzj.library.action.AddBookAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="deleteBookAction"  class="com.andzj.library.action.DeleteBookAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="updateBookAction"  class="com.andzj.library.action.UpdateBookAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="searchBookAction" class="com.andzj.library.action.SearchBookAction">
+		<property name="administratorService" ref="administratorService">
+	        
+	    </property>
+	</bean>
+	
+	<bean id="checkBookIsbnExistedAction" class="com.andzj.library.action.CheckBookIsbnExistedAction"> 
+		<property name="administratorService" ref="administratorService">
+	        
+	    </property>   
+	</bean>
+	
+	<bean id="searchHotBooksAction" class="com.andzj.library.action.SearchHotBooksAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<!--***************************借阅记录相关****************************-->
+	
+	<bean id="addBorrowAction"  class="com.andzj.library.action.AddBorrowAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>   
+	</bean>
+	
+	<bean id="deleteBorrowAction"  class="com.andzj.library.action.DeleteBorrowAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="updateBorrowAction"  class="com.andzj.library.action.UpdateBorrowAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchBorrowAction" class="com.andzj.library.action.SearchBorrowAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>   
+	    
+	</bean>
+	
+	<!-- **************************借阅历史相关***************************** -->
+	<bean id="updateBorrowHistoryAction" class="com.andzj.library.action.UpdateBorrowHistoryAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+
+	<bean id="searchBorrowHistoryAction" class="com.andzj.library.action.SearchBorrowHistoryAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>	
+	
+	<!--***************************评论记录相关****************************-->
+	<bean id="addCommentScoreAction" class="com.andzj.library.action.AddCommentScoreAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="addCommentAction" class="com.andzj.library.action.AddCommentAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchCommentAction"  class="com.andzj.library.action.SearchCommentAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>   
+	</bean>
+	
+	<bean id="deleteCommentAction" class="com.andzj.library.action.DeleteCommentAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="checkCommentExistedAction" class="com.andzj.library.action.CheckCommentExistedAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<!-- **************************评分相关****************************** -->
+	<bean id="addScoreAction"  class="com.andzj.library.action.AddScoreAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchScoreAction" class="com.andzj.library.action.SearchScoreAction">
+	   	<property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<!--***************************普通用户相关****************************-->
+	<bean id="addUserAccountAction" class="com.andzj.library.action.AddUserAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="deleteUserAccountAction" class="com.andzj.library.action.DeleteUserAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="updateUserAccountAction" class="com.andzj.library.action.UpdateUserAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="checkUserAccountExistedAction" class="com.andzj.library.action.CheckUserAccountExistedAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchUserAccountAction" class="com.andzj.library.action.SearchUserAccountAction">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<!-- *******************用于App访问的Action接口********************** -->
+	
+	<bean id="registerUserAccountApp"  class="com.andzj.library.action.app.RegisterUserAccountApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="userAccountLoginApp" class="com.andzj.library.action.app.UserAccountLoginApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="userAccountAutoLoginApp" class="com.andzj.library.action.app.UserAccountAutoLoginApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	<bean id="checkUserPasswordApp"  class="com.andzj.library.action.app.CheckUserPasswordApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="updateUserPasswordApp" class="com.andzj.library.action.app.UpdateUserPasswordApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="searchBookApp"  class="com.andzj.library.action.app.SearchBookApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="searchBorrowApp" class="com.andzj.library.action.app.SearchBorrowApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="searchCommentApp" class="com.andzj.library.action.app.SearchCommentApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property>  
+	</bean>
+	
+	<bean id="searchScoreApp"  class="com.andzj.library.action.app.SearchScoreApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="addBorrowApp"  class="com.andzj.library.action.app.AddBorrowApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="deleteBorrowApp" class="com.andzj.library.action.app.DeleteBorrowApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="addCommentWithScoreApp"  class="com.andzj.library.action.app.AddCommentWithScoreApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchBorrowHistoryApp" class="com.andzj.library.action.app.SearchBorrowHistoryApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="deleteCommentApp" class="com.andzj.library.action.app.DeleteCommentApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="addFeedbackApp" class="com.andzj.library.action.app.AddFeedbackApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="searchFeedbackApp" class="com.andzj.library.action.app.SearchFeedbackApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="updateUserAccountApp" class="com.andzj.library.action.app.UpdateUserAccountApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<bean id="uploadUserImageApp"  class="com.andzj.library.action.app.UploadUserImageApp">
+	    <property name="administratorService" ref="administratorService">
+	        
+	    </property> 
+	</bean>
+	
+	<!-- more bean definitions go here -->
+
+</beans>  

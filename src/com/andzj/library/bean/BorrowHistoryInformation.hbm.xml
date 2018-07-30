@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.andzj.library.bean">
+    <class name="BorrowHistoryInformation" table="borrow_history_information">
+        <id name="historyId" column="history_id">
+            <generator class="native"></generator>
+        </id>
+	<property name="bookIsbn" column="book_isbn" type="java.lang.String"
+	    not-null="true" length="20"></property>
+	<property name="accountName" column="account_name" type="java.lang.String"
+	    not-null="true" length="20" ></property>
+	<property name="borrowTime" column="borrow_time" type="java.lang.String"
+	        not-null="true" length="22" ></property>
+	<property name="returnTime" column="return_time" type="java.lang.String"
+	    not-null="true" length="22" ></property>
+	<property name="historyNotes" column="history_notes" type="java.lang.String"
+	    not-null="true" length="30" ></property>
+
+	
+    </class>
+	
+</hibernate-mapping>
+

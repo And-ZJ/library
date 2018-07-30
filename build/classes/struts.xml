@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.multipart.maxSize" value="20971520"/> 
+	<include file="struts-default.xml" />
+	<package name="default" extends="struts-default">
+    	<!-- *******************管理员相关************************* -->
+    	<action name="addAdministratorAccountAction" class="com.andzj.library.action.AddAdministratorAccountAction">
+    	    <result name="success" type="redirect">/WEB/addAdministratorAccount.html</result>
+    	    <result name="error" type="redirect">/WEB/error.html</result>
+     	</action>
+     	
+     	<action name="administratorLoginAction" class="com.andzj.library.action.AdministratorLoginAction">
+     	    <result name="success" >success.html</result>
+     	    <result name="error" >/WEB/error.html</result>
+     	</action>
+     	
+     	<action name="deleteAdminAccountAction" class="com.andzj.library.action.DeleteAdminAccountAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="updateAdminAccountAction" class="com.andzj.library.action.UpdateAdminAccountAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchAdminAccountAction" class="com.andzj.library.action.SearchAdminAccountAction">
+     	    <result name="error">/WEB/error.html</result>
+     	</action>
+     	
+     	<action name="checkAdminAccountExistedAction" class="com.andzj.library.action.CheckAdminAccountExistedAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	
+     	<!-- *******************图书相关************************* -->
+     	
+     	<action name="uploadBookImageAction" class="com.andzj.library.action.UploadBookImageAction">
+     	    <result name="error">/WEB/error.html</result>
+     	</action>
+     	
+     	<action name="addBookAction" class="com.andzj.library.action.AddBookAction">
+     	    <result name="success">success.html</result>
+     	    <result name="error">/WEB/error.html</result>
+     	</action>
+     	
+     	<action name="deleteBookAction" class="com.andzj.library.action.DeleteBookAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="updateBookAction" class="com.andzj.library.action.UpdateBookAction">
+     	    <result name="error">WEB/error.html</result>
+     	    
+     	</action>
+     	
+     	<action name="searchBookAction" class="com.andzj.library.action.SearchBookAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="checkBookIsbnExistedAction" class="com.andzj.library.action.CheckBookIsbnExistedAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchHotBooksAction" class="com.andzj.library.action.SearchHotBooksAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<!-- *******************借阅相关************************* -->
+     	<action name="addBorrowAction" class="com.andzj.library.action.AddBorrowAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="deleteBorrowAction" class="com.andzj.library.action.DeleteBorrowAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="updateBorrowAction" class="com.andzj.library.action.UpdateBorrowAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchBorrowAction" class="com.andzj.library.action.SearchBorrowAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<!-- *******************借阅历史相关************************* -->
+     	
+     	<action name="updateBorrowHistoryAction" class="com.andzj.library.action.UpdateBorrowHistoryAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchBorrowHistoryAction" class="com.andzj.library.action.SearchBorrowHistoryAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	
+     	
+     	<!-- *******************评论相关************************* -->
+     	<action name="addCommentScoreAction" class="com.andzj.library.action.AddCommentScoreAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="addCommentAction" class="com.andzj.library.action.AddCommentAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchCommentAction" class="com.andzj.library.action.SearchCommentAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="deleteCommentAction"  class="com.andzj.library.action.DeleteCommentAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="checkCommentExistedAction" class="com.andzj.library.action.CheckCommentExistedAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<!-- *******************评分相关******************************** -->
+     	<action name="addScoreAction" class="com.andzj.library.action.AddScoreAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="searchScoreAction" class="com.andzj.library.action.SearchScoreAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<!-- *******************普通用户相关************************* -->
+     	
+     	<action name="addUserAccountAction" class="com.andzj.library.action.AddUserAccountAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="deleteUserAccountAction" class="com.andzj.library.action.DeleteUserAccountAction">
+     		<result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="updateUserAccountAction" class="com.andzj.library.action.UpdateUserAccountAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	 
+     	
+     	<action name="searchUserAccountAction" class="com.andzj.library.action.SearchUserAccountAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	<action name="checkUserAccountExistedAction" class="com.andzj.library.action.CheckUserAccountExistedAction">
+     	    <result name="error">WEB/error.html</result>
+     	</action>
+     	
+     	
+     	<!-- ******************反馈建议************************************** -->
+     	
+     	
+     	<!-- ************用于APP访问的Aciton接口 ************-->
+     	
+     	<action name="registerUserAccountApp" class="com.andzj.library.action.app.RegisterUserAccountApp">
+     	    
+     	</action>
+     	
+     	<action name="userAccountLoginApp" class="com.andzj.library.action.app.UserAccountLoginApp">
+     	    
+     	</action>
+     	
+     	<action name="userAccountAutoLoginApp" class="com.andzj.library.action.app.UserAccountAutoLoginApp">
+     	    
+     	</action>
+     	 
+     	<action name="checkUserPasswordApp" class="com.andzj.library.action.app.CheckUserPasswordApp"></action>
+	
+		<action name="updateUserPasswordApp"  class="com.andzj.library.action.app.UpdateUserPasswordApp"></action>
+	
+		<action name="searchBookApp" class="com.andzj.library.action.app.SearchBookApp"></action>
+		
+		<action name="searchBorrowApp" class="com.andzj.library.action.app.SearchBorrowApp"></action>
+		
+		<action name="searchCommentApp" class="com.andzj.library.action.app.SearchCommentApp"></action>
+		
+		<action name="searchScoreApp" class="com.andzj.library.action.app.SearchScoreApp"></action>
+		
+		<action name="addBorrowApp" class="com.andzj.library.action.app.AddBorrowApp"> </action>
+		
+		<action name="deleteBorrowApp" class="com.andzj.library.action.app.DeleteBorrowApp"></action>
+		
+		<action name="addCommentWithScoreApp" class="com.andzj.library.action.app.AddCommentWithScoreApp"></action>
+	
+		<action name="searchBorrowHistoryApp" class="com.andzj.library.action.app.SearchBorrowHistoryApp"></action>
+	
+		<action name="deleteCommentApp" class="com.andzj.library.action.app.DeleteCommentApp"></action>
+	
+		<action name="addFeedbackApp" class="com.andzj.library.action.app.AddFeedbackApp"></action>
+		
+		<action name="searchFeedbackApp" class="com.andzj.library.action.app.SearchFeedbackApp"></action>
+		
+		<action name="updateUserAccountApp" class="com.andzj.library.action.app.UpdateUserAccountApp"></action>
+		
+		<action name="uploadUserImageApp" class="com.andzj.library.action.app.UploadUserImageApp"></action>
+		
+	</package>
+</struts>
+	

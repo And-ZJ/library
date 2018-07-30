@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "dtd/hibernate-mapping-3.0.dtd">
+                            
+<hibernate-mapping package="com.andzj.library.bean">
+	<class name="BookInformation" table="book_information">
+	    <id name="bookId" column="book_id">
+	        <generator class="native"></generator>
+	    </id>
+	    
+	    <property name="bookIsbn" column="book_isbn" type="java.lang.String"
+	        not-null="true" length="20" ></property>
+	    <property name="bookImageAddress" column="book_image_address" type="java.lang.String"
+	        not-null="false" length="200" ></property>
+	    <property name="bookName" column="book_name" type="java.lang.String"
+	        not-null="true" length="40" ></property> 
+	    <property name="bookAuthor" column="book_author" type="java.lang.String"
+	        not-null="true" length="30" ></property>
+	   	<property name="bookPrice" column="book_price" type="java.lang.Double"
+	        not-null="true" ></property>
+	    <property name="bookPublishCompany" column="book_publish_company" type="java.lang.String"
+	        not-null="true" length="30" ></property>
+	    <property name="bookPublishTime" column="book_publish_time" type="java.lang.String"
+	        not-null="true" length="30" ></property>
+	    <property name="bookSummary" column="book_summary" type="java.lang.String"
+	        not-null="true" length="200"></property>
+	    
+	    <property name="bookTotalNumber" column="book_total_number" type="java.lang.Integer"
+	        not-null="true" ></property>
+	    <property name="bookRemainNumber" column="book_remain_number" type="java.lang.Integer"
+	        not-null="true" ></property>
+	    <property name="bookAverageScore" column="book_average_score" type="java.lang.Double"
+	        not-null="true" ></property>
+	    <property name="bookScoreNumber" column="book_score_number" type="java.lang.Integer"
+	        not-null="true" ></property>
+	    <property name="bookPosition" column="book_position" type="java.lang.String"
+	        not-null="true" length="30"></property>
+	    <property name="bookKeyWords" column="book_key_words" type="java.lang.String"
+	        not-null="true" length="50"></property>
+	    <property name="bookNotes" column="book_notes" type="java.lang.String"
+	        not-null="true" length="50"></property>
+	    <property name="operateAccountName" column="operate_account_name" type="java.lang.String"
+	        not-null="true" length="20"></property>
+	    <property name="operateTime" column="operate_time" type="java.lang.String"
+	        not-null="true" length="22"></property>
+	           
+	</class> 
+	    
+	
+</hibernate-mapping>
+                        

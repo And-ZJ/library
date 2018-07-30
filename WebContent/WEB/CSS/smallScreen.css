@@ -1,0 +1,109 @@
+@CHARSET "UTF-8";
+*{margin:0;padding:0;}
+li{list-style:none;}
+.top{width:100%;overflow:hidden;margin-top:20px;}
+img.book_image{float:left;margin-left:20px;width:20%;height:30%;}
+.top ul{float:right;width:69%;padding:0 20px 20px 20px;}
+.top li{margin-top:10px;}
+/**
+.content{margin-top:20px;margin-left:20px;} 
+.content p{text-indent:2em;padding:10px;font-size:14px;line-height:25px;}
+.comment{
+    width:80%;
+    padding:15px;
+    margin-left:80px;
+    margin-top:15px;
+    position:relative;
+}
+.title{
+    margin:10px 0 10px 20px;
+}
+.comment img{
+    width:8.3%;
+    height:8.3%;
+    float:left;
+    margin:-10px 0 0 -80px;
+}
+.comment p{
+    margin-top:10px;
+    font-size:14px;
+    line-height:25px;
+}
+.comment span{
+    position:absolute;
+    right:20px;
+    top:10px;
+    font-size:13px;
+    color:yellow;
+}
+**/
+
+img.rating{
+	width:20px;
+	height: 20px;
+}
+
+div#comment_btn{
+	width:100%;
+	height: 20px;
+	background-color: red;
+	color: white;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 5px; 
+	padding-bottom: 5px;
+	cursor: pointer;
+} 
+  
+div#comment_box{
+	width:100%;
+	
+}  
+ 
+div.comment{
+	padding:10px;
+	border: 1px solid gray;
+}
+
+ 
+div.score_div{
+	height: 20px;
+	padding: 5px;
+}
+
+div.account_name{
+	float:left;
+	top:0px;
+	left:0px;
+	color: blue;
+	font-size: 18px;
+}
+
+div.score{
+	float:right;
+	top: 0px;
+	right: 0px;
+}
+
+div.content_box{
+   	
+} 
+ 
+div.content_div{
+	background-color: #cdcdcd; 
+	border: 1px double white;
+	padding: 3px;
+}
+
+div.content{
+	width:100%;
+	word-spacing:normal;
+	overflow:auto;
+	font-size: 16px;
+}
+
+div.time{
+	width:100%;
+	font-size: 14ps;
+}
+

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "dtd/hibernate-mapping-3.0.dtd">
+
+
+<hibernate-mapping package="com.andzj.library.bean">
+    <class name="UserAccount" table="user_account">
+        <id name="accountId" column="account_id">
+            <generator class="native"></generator>
+        </id>
+        
+        <property name="accountName" column="account_name" type="java.lang.String"
+            not-null="true" length="20"></property>
+        <property name="passwordMD5" column="password_md5" type="java.lang.String"
+            not-null="true" length="155"></property>
+        <property name="registerTime" column="register_time" type="java.lang.String"
+            not-null="true" length="22"></property>
+        <property name="bindStudentAccount" column="bind_student_account" type="java.lang.String"
+            not-null="true" length="20"></property>
+        <property name="userImageStr" column="user_image_str" type="java.lang.String"
+            length="100"></property>
+        <property name="userNickname" column="user_nickname" type="java.lang.String"
+            not-null="true" length="10"></property>
+        <property name="userSex" column="user_sex" type="java.lang.String"
+            not-null="true" length="10"></property>
+        <property name="userDescribeWords" column="user_describe_words" type="java.lang.String"
+            not-null="true" length="50"></property>
+        <property name="userUpdateTime" column="user_update_time" type="java.lang.String"
+            not-null="true" length="22"></property>
+    </class>
+    
+    
+</hibernate-mapping>

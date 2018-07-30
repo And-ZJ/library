@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+div#book_comment , div#book_borrow{
+	width: 100%;
+}
+
+#expand_comment , #expand_borrow{
+	width: 100%;
+	background: url("../SOURCE/background1.png") no-repeat center;
+}
+
+div.button{
+	cursor: pointer;
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+img#book_image
+{
+	max-height:300px;
+	max-width:300px;
+}

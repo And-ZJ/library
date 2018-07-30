@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>用户账户详细信息</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/BookDetail.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/detail_table.css" rel="stylesheet">
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			
+			var administratorAccountName = decodeURI(GetQueryString("operate_account_name"));
+			var accountName = decodeURI(GetQueryString("account_name"));
+			
+			if (accountName == null)
+			{
+				alert("地址出现了问题,请返回重试");
+			}
+			else
+			{
+				jQuery.ajax({
+		   	        type: "POST",
+		   	        url: "searchAdminAccountAction",
+		   	        data:{
+		   	        	"mode":"account",
+		   	        	"search_words":accountName
+					},
+		   	        success:function(data){
+			   	        	if (data.info == "Match" )
+			   	        	{
+			   	        		jQuery("span#account_id").text(data.data[0].accountId);
+			   	        		jQuery("span#account_name").text(data.data[0].accountName);
+			   	        		jQuery("span#nickname").text(data.data[0].administratorNickname);
+			   	        		jQuery("span#register_time").text(data.data[0].registerTime);
+			   	        	}
+			   	        	else if (data.info == "NotMatch")
+			   	        	{
+			   	        		alert("抱歉,没有找到此帐号:"+accountName);
+			   	        	}
+			   	        	else
+			   	        	{
+			   	        		alert("返回信息出错:" + data.info);
+			   	        	}
+			   	        },
+		   	        error:function(jQXHR){alert("查询失败,错误码:" + jQXHR.status);}
+				});
+			}
+			
+			jQuery("#update_admin_account").click(function(){
+				var updateAccountName = jQuery("#account_name").text();
+				var updateNickname = jQuery("#nickname").text();
+
+				window.location.href="UpdateAdminAccountFrame.html?operate_account_name="+administratorAccountName +"&account_name=" + updateAccountName + "&nickname=" + updateNickname;
+			});
+			
+			jQuery("#delete_admin_account").click(function(){
+				if (!confirm("确认删除吗?"))
+				{
+					return;
+				}
+				
+				var deleteAccountName = jQuery("#account_name").text();
+				//alert("accountName:" + deleteAccountName + ",adminName:" + administratorAccountName);
+				if (deleteAccountName == administratorAccountName)
+				{
+					alert("不可删除自己");
+					return;
+				}
+				else if("admin" == deleteAccountName)
+				{
+					alert("不可删除系统默认账户");
+					return;
+				}
+				
+				jQuery.ajax({
+					type:"POST",
+					url:"deleteAdminAccountAction",
+					data:{
+						"operate_account_name":administratorAccountName,
+						"account_name":deleteAccountName
+					},
+					success:function(data){
+						if (data.info == "ForbidDelete")
+						{
+							alert("不能删除");
+						}
+						else if (data.info == "DeleteSuccess")
+						{
+							alert("删除完成,点击确定将自动返回上一页");
+							window.history.back();
+						}
+						else if (data.info == "DeleteError")
+						{
+							alert("删除出错");
+						}
+						else
+						{
+							alert("执行删除操作时出错");
+						}
+					},
+					error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+				});
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+	<table id="admin_account_detail_table" class="detail">
+	<caption>管理员帐号详细信息</caption>
+		<tr>
+			<th>id</th>
+			<td><span id="account_id"></span></td>
+		</tr>
+		<tr>
+			<th>帐号</th>
+			<td><span id="account_name"></span></td>
+		</tr>	
+		<tr>
+			<th>昵称</th>
+			<td><span id="nickname"></span></td>
+		</tr>
+		<tr>
+			<th>注册时间</th>
+			<td><span id="register_time"></span></td>
+		</tr>
+	</table>
+	</div>
+	<div align="center">
+		<button id="update_admin_account" class="button">修改信息</button>
+		<button id="delete_admin_account" class="button">删除此帐号</button>
+		<button id="page_back" onclick="javascript:window.history.back();" class="button">返回上一页</button>
+	</div>
+</body>
+</html>

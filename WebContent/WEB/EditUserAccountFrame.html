@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>编辑用户账户</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/mydataTable.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/jquery.dataTables.css" rel="stylesheet">
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			
+			var administratorAccountName = decodeURI(GetQueryString("operate_account_name"));
+			//alert("AccountName:" + administratorAccountName);
+			
+			var regNumber = new RegExp("^[0-9]*$");
+			
+			var table = jQuery("#edit_user_account_table").DataTable({
+				"ajax":{
+					"type":"post", 
+					"url":"searchUserAccountAction",  
+					"data":{
+						"mode" : "nothing",
+						"search_words":""
+					},
+					"error":function(jQXHR){ alert("错误码:" + jQXHR.status); }
+				},
+				"columns": [
+					{ "data": "accountId", "title": "数据库编号" },
+					{ "data": "accountName","title":"帐号"},
+					{ "data": "bindStudentAccount","title":"绑定的学号"},
+					{ "data": "userNickname", "title": "昵称" },
+					{ "data": "userSex","title":"性别" },
+					{ "data": "userDescribeWords","title":"个性签名" },
+			       	{ "data": "registerTime","title": "注册时间" }, 
+			       	{ "data": null,"title":"操作","defaultContent": "<button id='more_btn' class='more_btn' type='button'>更多</button>"}
+				],
+				"language": {
+			    	"sProcessing": "处理中...", 
+			    	"sLengthMenu": "每页显示数量  _MENU_ ",
+			    	"sZeroRecords": "没有匹配结果",
+			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项", 
+			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "在结果中过滤:", 
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "表中数据为空",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			        	"sFirst": "首页",
+			             "sPrevious": "上页",
+			             "sNext": "下页",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+				},
+			    "bFilter": true, //开关，是否启用客户端过滤器 
+			});
+			 
+			jQuery("#edit_user_account_table tbody").on("click",".more_btn",function(){
+				var detailAccountName = jQuery(this).parents("tr").children("td:eq(1)").text();
+				
+				window.location.href = "UserAccountDetailFrame.html?operate_account_name="+administratorAccountName +"&account_name="+detailAccountName;			
+				
+			});
+			
+			jQuery("#search_btn").click(function(){
+				var searchWords = jQuery("#search_input").val();
+				if (searchWords == "")
+				{
+					alert("输入框为空"); 
+					return;
+				}
+				else if (!regNumber.test(searchWords))
+				{
+					alert("请输入纯数字");
+					return;
+				}
+				var param = {
+						"mode":"account",
+						"search_words":searchWords
+				    };
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+			});
+			
+			jQuery("#search_all_btn").click(function(){
+				var param = {
+						"mode":"all",
+						"search_words":""
+				    };
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+			});
+			
+			jQuery("#clear_input").click(function(){
+				jQuery("#search_input").val("");
+			});
+		});
+		
+	</script>
+	
+</head>
+<body>
+		<div align="center">
+		<button id="search_all_btn">展开所有用户帐号</button>&nbsp;&nbsp;&nbsp;
+		<span>查询某个帐号,请输入帐号名:</span>&nbsp;
+		<input id="search_input" type="text" size="22" maxlength="20">&nbsp;
+		<button id="search_btn">查询</button>&nbsp;<button id="clear_input">清空输入框</button>
+	</div>
+	<div style="background-color: #f63e74;width: 100%;height: 2px;margin:3px;"></div>
+	<table id="edit_user_account_table" class="display">
+	</table>
+</body>
+</html>

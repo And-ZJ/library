@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>增加一条评分记录</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.fix.clone.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			
+			var regNumber = new RegExp("^[0-9]*$");
+			
+			jQuery("#add_score_btn").click(function(){
+				if (jQuery("#book_isbn").val() == "")
+				{
+					alert("请输入图书ISBN");
+					jQuery("#book_isbn").focus();
+				}
+				else if (jQuery("#score_account_name").val() == "")
+				{
+					alert("请输入评分人账户");
+					jQuery("#score_account_name").focus();
+				} 
+				else if (jQuery("#comment_score").val() == "")
+				{
+					alert("请打分,输入0~5之间的整数值,数字越高,代表您的评价越高.");
+					jQuery("#comment_score").focus();
+				}
+				else if (jQuery("#comment_score").val() < 0 || jQuery("#comment_score").val() >5)
+				{
+					alert("请输入0-5之间的数字.");
+					jQuery("#comment_score").focus();
+				}
+				else
+				{
+					jQuery.ajax({
+			   	        type: "POST", 
+			   	        url: "addCommentScoreAction",
+			   	        data:{ 
+			   	        	"book_isbn":jQuery("#book_isbn").val(),
+							"comment_account_name":jQuery("#score_account_name").val(),
+							"score":jQuery("#comment_score").val(),
+			   	        	"comment_content":jQuery("#comment_content").val()
+			   	        	}, 
+			   	        success:function(data){
+				   	        	if (data.info1 == "CommentAddSuccess")
+				   	        	{
+				   	        		if (data.info2 == "ScoreUpdateSuccess" || data.info2 == "ScoreAddSuccess")
+				   	        		{
+				   	        			alert("评分成功!");
+				   	        		}
+				   	        		else
+				   	        		{
+				   	        			alert("评分提交失败,但评论提交成功");
+				   	        		}
+				   	        	}
+				   	        	else if (data.info1 == "CommmetAddError")
+				   	        	{
+				   	        		alert("提交失败,请刷新后再试");
+				   	        	}
+				   	        	else if (data.info == "BookIsbnNotExisted")
+				   	        	{
+				   	        		alert("此书不存在,请检查isbn是否写对:" + jQuery("#book_isbn").val());
+				   	        	}
+				   	        	else if (data.info == "AccountNotExisted")
+				   	        	{
+				   	        		alert("此帐号不存在,请检查帐号是否写对:" + jQuery("#comment_account_name").val())
+				   	        		
+				   	        	}
+		 		   	        	else
+				   	        	{
+				   	        		alert("返回信息出错:"+data.info);
+				   	        	}
+				   	        },
+			   	        error:function(jQXHR){alert("评论失败,错误码:" + jQXHR.status);}
+					});
+				}
+				
+			});
+			
+			jQuery("#book_isbn").blur(function(){
+				if (jQuery("#add_score_btn").is(":focus") || jQuery("#clear_btn").is(":focus"))
+				{
+					return;
+				}
+				if (jQuery("#book_isbn").val() != "")
+				{
+					jQuery.ajax({
+			   	        type: "POST",
+			   	        url: "checkBookIsbnExistedAction",
+			   	        data:{
+			   	        	"book_isbn":jQuery("#book_isbn").val()
+			   	        	},
+			   	        success:function(data){
+			   	        	if (data.info=="BookIsbnExisted")
+			   	        	{
+			   	        		jQuery("#no_isbn").hide();
+			   	        	}
+			   	        	else if (data.info == "BookIsbnNotExisted")
+			   	        	{
+			   	        		jQuery("#no_isbn").show();
+			   	        	}
+			   	        	else
+			   	        	{
+			   	        		alert("返回信息有误:"+data.info);
+			   	        	}
+			   	        },
+			   	        error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+					});
+				}
+				else
+				{
+					jQuery("#no_isbn").hide();
+				}
+			});
+			
+			jQuery("#score_account_name").blur(function(){
+				if (jQuery("#add_score_btn").is(":focus") || jQuery("#clear_btn").is(":focus"))
+				{
+					return;
+				}
+				
+				if (jQuery("#score_account_name").val() != "")
+				{
+					jQuery.ajax({
+			   	        type: "POST",
+			   	        url: "checkUserAccountExistedAction",
+			   	        data:{
+			   	        	"account_name":jQuery("#score_account_name").val()
+			   	        	},
+			   	        success:function(data){
+			   	        	if (data.info=="AccountExisted")
+			   	        	{
+			   	        		jQuery("#no_user").hide();
+			   	        	}
+			   	        	else if (data.info == "AccountNotExisted")
+			   	        	{
+			   	        		jQuery("#no_user").show();
+			   	        	}
+			   	        	else
+			   	        	{
+			   	        		alert("返回信息有误:" + data.info);
+			   	        	}
+			   	        },
+			   	        error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+					});
+				}
+				else
+				{
+					jQuery("#no_user").hide();
+				}
+			});
+			
+			jQuery("#clear_btn").click(function(){
+				jQuery("#book_isbn").val("");
+				jQuery("#score_account_name").val("");
+				jQuery("#comment_score").val("5");
+				jQuery("#comment_content").val("");
+				jQuery("#no_user").hide();
+				jQuery("#no_isbn").hide();
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+		<table>
+			<caption>增加一条评分</caption>
+			<tr>
+				<th>评分书籍的ISBN号:</th>
+				<td><input id="book_isbn" type="text" size="20" maxlength="20"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<th>评分人的账号:</th>
+				<td><input id="score_account_name" type="text" size="20" maxlength="20"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<th>评分(0~5):</th>
+				<td><input id="comment_score" type="text" size="20" maxlength="1" value="5"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<th>评论内容:</th>
+				<td><textarea id="comment_content" rows="10" cols="20" maxlength="200"></textarea></td>
+			</tr>
+		</table>
+	</div>
+	<div align="center">
+		<span id="no_isbn" class="error_hint" hidden="true">库中没有此ISBN所指的图书,请检查下是否写错</span><br>
+		<span id="no_user" class="error_hint" hidden="true">库中没有此用户账户的信息,请检查下是否写错</span><br>
+		<button id="add_score_btn">提交评论和评分</button><button id="clear_btn">清空上述填入的内容</button>
+	</div>
+</body>
+</html>

@@ -1,0 +1,32 @@
+@CHARSET "UTF-8";
+
+table#edit_book_table , tabel#edit_admin_account_table , 
+table#edit_user_account_table , table#edit_borrow_table,
+table#edit_comment_table
+{
+	font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
+	width:100%;
+	border-collapse:collapse;
+	
+}
+
+table#edit_book_table th ,table#edit_admin_account_table th ,
+table#edit_user_account_table th,table#edit_borrow_table th,
+table#edit_comment_table th
+{
+	text-align:center;
+	padding-top:10px;
+	padding-bottom:4px;
+	background-color:#323232;
+	color:#ffffff;
+	max-width: 100px;
+}
+
+table#edit_book_table tbody td ,table#edit_admin_account_table tbody td ,
+table#edit_user_account_table tbody td,table#edit_borrow_table tbody td,
+table#edit_comment_table tbody td
+{
+	max-width: 200px;
+	word-spacing: normal;
+	word-wrap:break-word;
+}

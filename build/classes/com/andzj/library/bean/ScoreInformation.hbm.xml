@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="com.andzj.library.bean">
+    <class name="ScoreInformation" table="score_information">
+        <id name="scoreId" column="score_id">
+            <generator class="native"></generator>
+        </id>
+	<property name="bookIsbn" column="book_isbn" type="java.lang.String"
+	    not-null="true" length="20"></property>
+	<property name="scoreAccountName" column="score_account_name" type="java.lang.String"
+	    not-null="true" length="20" ></property>
+	<property name="commentScore" column="comment_score" type="java.lang.Double"
+	        not-null="true" ></property>
+	<property name="scoreTime" column="score_time" type="java.lang.String"
+	    not-null="true" length="22" ></property>
+	
+    </class>
+	
+</hibernate-mapping>
+

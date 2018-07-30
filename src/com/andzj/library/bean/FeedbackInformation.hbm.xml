@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "dtd/hibernate-mapping-3.0.dtd">
+
+
+
+<hibernate-mapping package="com.andzj.library.bean">
+    <class name="FeedbackInformation" table="feedback_information">
+        <id name="feedbackId" column="feedback_id">
+            <generator class="native"></generator>
+        </id>
+	<property name="feedbackAccountName" column="feedback_account_name" type="java.lang.String"
+	    not-null="true" length="20"></property>
+	<property name="feedbackContent" column="feedback_content" type="java.lang.String"
+	    not-null="true" length="200"></property>
+	<property name="feedbackTime" column="feedback_time" type="java.lang.String"
+	    not-null="true" length="22" ></property>
+	<property name="feedbackCategory" column="feedback_category" type="java.lang.Integer"
+	    not-null="true" length="1" ></property>
+	<property name="feedbackState" column="feedback_state" type="java.lang.Integer"
+	    not-null="true" ></property>
+	<property name="handleAccountName" column="handle_account_name" type="java.lang.String"
+	    length="20"></property>
+	<property name="handleCompleteTime" column="handle_complete_time" type="java.lang.String"
+	    length="22"></property>
+	<property name="resultMessage" column="result_message" type="java.lang.String"
+	    length="200"></property>
+    </class>
+	
+</hibernate-mapping>
+

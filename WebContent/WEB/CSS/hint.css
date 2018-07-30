@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+
+span.input_need_hint{
+	color:red;
+}
+
+.error_hint{
+	color: red;
+	margin-bottom: 10px;
+}

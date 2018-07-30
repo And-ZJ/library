@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+table{
+	
+	border-collapse: collapse;
+	border-spacing: 1px;
+}
+
+table caption{
+	
+	background-color: #323232;
+	color: white;
+} 
+
+table th,td{
+	text-align: left;
+	padding:5px;
+}
+
+table div#img_div{
+	float:left;
+	/**border:1px solid black;**/
+}
+
+img#book_image{
+	border:1px solid black;
+}
+
+label#choose_img{
+	padding: 5px;
+	border:1px solid blue;
+}
+
+input#choose_file{
+	margin:10px 10px 3px 10px;
+	border: 1px dotted red;
+	padding: 50px;
+}
+
+span#file_hint{
+	
+}

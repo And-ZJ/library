@@ -1,0 +1,46 @@
+@CHARSET "UTF-8";
+
+
+table.detail{
+	border-style:solid;
+	border: 1px solid gray;	
+	border-collapse: collapse;
+	border-spacing: 1px;
+	padding: 10px;
+	min-width: 600px;
+}
+
+table.detail caption{
+	border: 1px solid gray;
+	background-color: #323232;
+	padding: 10px;
+	font-size:20px;
+	color: red;
+}
+
+
+table.detail th{
+	border: 1px solid gray;	
+	text-align: left;
+	max-width: 300px;    
+	min-width:100px;
+	padding: 10px; 
+}
+   
+table.detail td{
+	border: 1px solid gray;	
+	text-align: left;  
+	max-width: 1000px; 
+	min-width:500px; 
+	padding: 10px;
+}    
+
+table.detail span{
+	color: blue;
+	word-spacing: normal;
+}
+
+button.button{
+	margin: 15px;
+	padding: 5px;
+}

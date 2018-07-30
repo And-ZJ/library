@@ -1,0 +1,132 @@
+@CHARSET "UTF-8";
+*{
+	margin:0;
+	padding:0;
+}
+
+li{
+	list-style: none;
+	word-spacing:normal;
+}
+ 
+body{
+	
+}
+
+.main{
+	max-width:400px;
+	/**min-width:200px;**/
+	margin:0 auto;
+	border:1px solid gray;
+}
+
+.top{
+	width:100%;
+	overflow:hidden;
+	margin-top:20px;
+	margin-bottom: 20px;
+}
+
+img#book_image{
+	float:left;
+	margin-left:1%;
+	margin-top: 10px;
+	width:30%;
+	height:40%;
+}
+
+.top ul{
+	float:right;
+	width:65%;
+}
+
+.top li{
+	margin-top: 10px;
+}
+
+div#middle{
+	margin: 10px;
+}
+
+span#book_summary{
+	
+}
+
+span.book_information{
+	color: blue;
+	padding-left: 10px;
+	padding-right: 10px;
+	word-spacing: normal;
+	word-wrap:break-word;
+	font-family: fantasy;
+}
+
+img.rating{
+	width:17px;
+	height: 17px;
+}
+
+div#comment_btn{
+	width:100%;
+	height: 20px;
+	background-color: red;
+	color: white;
+	text-align: center;
+	font-size: 18px;
+	padding-top: 5px; 
+	padding-bottom: 5px;
+	cursor: pointer;
+} 
+  
+div#comment_box{
+	width:100%;
+	
+}  
+ 
+div.comment{
+	padding:10px;
+	border: 1px solid gray;
+}
+
+ 
+div.score_div{
+	height: 20px;
+	padding: 5px;
+}
+
+div.account_name{
+	float:left;
+	top:0px;
+	left:0px;
+	color: blue;
+	font-size: 18px;
+}
+
+div.score{
+	float:right;
+	top: 0px;
+	right: 0px;
+}
+
+div.content_box{
+   	
+} 
+ 
+div.content_div{
+	background-color: #cdcdcd; 
+	border: 1px double white;
+	padding: 3px;
+}
+
+div.content{
+	width:100%;
+	word-spacing:normal;
+	overflow:auto;
+	font-size: 16px;
+}
+
+div.time{
+	width:100%;
+	font-size: 14ps;
+}
+

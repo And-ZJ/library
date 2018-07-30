@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>修改普通用户信息</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/util.js"></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var administratorAccountName = decodeURI(GetQueryString("operate_account_name"));
+			var accountName = decodeURI(GetQueryString("account_name"));
+			
+			var regNumber = new RegExp("^[0-9]*$");
+			if (accountName == null)
+			{
+				alert("地址出现了问题,请返回重试");
+			}
+			else
+			{
+				jQuery.ajax({
+		   	        type: "POST",
+		   	        url: "searchUserAccountAction",
+		   	        data:{
+		   	        	"mode":"account",
+		   	        	"search_words":accountName
+					},
+		   	        success:function(data){
+			   	        	if (data.info == "Match" )
+			   	        	{ 
+			   	        		jQuery("input#account_name").val(data.data[0].accountName);
+			   	        		jQuery("input#bind_student_account").val(data.data[0].bindStudentAccount);
+			   	        		jQuery("input#nickname").val(data.data[0].userNickname); 
+			   	        		jQuery("select#sex_select").find("option[value='" + data.data[0].userSex + "']").attr("selected",true); 
+			   	        		jQuery("textarea#describe_words").text(data.data[0].userDescribeWords);
+			   	        	}
+			   	        	else if (data.info == "NotMatch")
+			   	        	{
+			   	        		alert("抱歉,没有找到此帐号:" + accountName);
+			   	        	}
+			   	        	else
+			   	        	{
+			   	        		alert("返回信息出错:");//+data.info);
+			   	        	}
+			   	        },
+		   	        error:function(jQXHR){alert("查询失败,错误码:" + jQXHR.status);}
+				});
+			}
+			
+			jQuery("#password1").keyup(function(){
+				if (jQuery("#password2").val() != "")
+				{
+					if (jQuery("#password2").val() != jQuery("#password1").val())
+					{
+						jQuery("#password_different_hint").show();
+					}
+					else
+					{
+						jQuery("#password_different_hint").hide();
+					}
+				}
+			});
+			
+			jQuery("#password2").keyup(function(){
+				if (jQuery("#password2").val() != jQuery("#password1").val())
+				{
+					jQuery("#password_different_hint").show();
+				}
+				else
+				{
+					jQuery("#password_different_hint").hide();
+				}
+			});
+			
+			jQuery("#update_user_account").click(function()
+					{
+						if (jQuery("#account_name").val() == "")
+						{
+							alert("帐号为空,请填入手机号.");
+						}
+						else if (!regNumber.test(jQuery("#account_name").val()))
+						{
+							alert("请输入手机号,不要输入其它字符");
+						}
+						else if(jQuery("#password1").val() == "" || jQuery("#password2").val() == "")
+						{
+							alert("请填入密码");	
+						}
+						else if(jQuery("#password1").val() != jQuery("#password2").val())
+						{
+							alert("密码不一致.");
+						}
+						else if (jQuery("#bind_student_account").val() == "")
+						{
+							alert("请填入绑定的学号.");
+						}
+						else if (!regNumber.test(jQuery("#bind_student_account").val()))
+						{
+							alert("绑定的学号只能为纯数字");
+						}
+						else if (jQuery("#nickname").val() == "")
+						{
+							alert("请填入昵称.");
+						}
+						else 
+						{
+							jQuery.ajax({
+					   	        type: "POST",
+					   	        url: "updateUserAccountAction", 
+					   	        data:{
+					   	        	"mode":"both",
+					   	        	"account_name":jQuery("#account_name").val(),
+									"password":jQuery("#password1").val(),  
+									"bind_student_account":jQuery("#bind_student_account").val(),
+									"nickname":jQuery("#nickname").val(),
+									"sex":jQuery("#sex_select option:selected").val(),
+									"describe_words":jQuery("#describe_words").val()
+									},
+					   	        success:function(data){
+						   	        	if (data.info == "UpdateSuccess")
+						   	        	{
+						   	        		alert("修改成功!点击确定将返回上一页");  
+						   	        		window.history.back();
+						   	        	}
+						   	        	else if (data.info == "UpdateError")
+						   	        	{
+						   	        		alert("修改出错,请刷新重试");
+						   	        	}
+						   	        	else
+						   	        	{ 
+						   	        		alert("执行修改操作时出错,请刷新重试");
+						   	        	}
+						   	        }, 
+					   	        error:function(jQXHR){alert("修改失败,错误码:" + jQXHR.status);}
+							});
+						}
+					});
+			
+			
+			jQuery("button#clear_btn").click(function(){
+				jQuery("#password1").val("");
+				jQuery("#password2").val("");
+				jQuery("#bind_student_account").val("");
+				jQuery("#nickname").val("");
+				jQuery("#sex").val("");
+				jQuery("#describe_words").val(""); 
+				jQuery("#sex_select").find("option[value='男']").attr("selected",true);
+				jQuery("#password_different_hint").hide();
+			});
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+		<table>
+			<caption>更改普通用户帐号信息</caption>
+			<tr>
+				<td>帐号:</td>
+				<td><input type="text" id="account_name" size="20" maxlength="20" readonly="readonly"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<td>新密码:</td>
+				<td><input type="password" id="password1" size= "20" maxlength="20"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<td>再次输入新密码:</td>
+				<td><input type="password" id="password2" size= "20" maxlength="20"><span class="input_need_hint">*</span>
+					<div id="password_different_hint" class="error_hint" hidden="true">两次密码不一致</div></td>
+			</tr>
+			<tr>
+				<td>绑定新的学号:</td>
+				<td><input type= "text" id="bind_student_account" size = "20" maxlength="20"><span class="input_need_hint">*</span></td>								
+			</tr>
+			<tr>
+				<td>新昵称:</td>
+				<td><input type="text" id="nickname" size="20" maxlength="20"><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<td>新性别:</td>
+				<td><select id="sex_select">
+  				<option value="男">男</option>
+				<option value="女">女</option>
+				<option value="保密">保密</option>
+			</select><span class="input_need_hint">*</span></td>
+			</tr>
+			<tr>
+				<td>新个性签名:</td>
+				<td><textarea id="describe_words" rows="3" cols="20" maxlength="50"></textarea><span class="input_need_hint">*</span></td>
+			</tr>
+		</table>
+		
+	</div>
+	<div align="center">
+		<span style="color: red;">请妥善保管帐号及密码</span><br>
+		<button id="update_user_account" >点击提交修改后的信息</button>
+		<button id="clear_btn">点击清空表单内容</button><button id="page_back" onclick="javascript:window.history.back();">返回上一页</button>
+	</div>
+</body>
+</html>

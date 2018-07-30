@@ -1,0 +1,60 @@
+@CHARSET "UTF-8";
+
+.nav dl, .nav dt, .nav dd{ padding:0; margin:0; }
+.nav {
+    width:170px;
+    border:none;
+    font-size:18px;
+    position:absolute;
+    left:0px;
+    top:200px;
+    margin-top:0px;
+}
+.nav dl {
+    width:170px;
+    /*height:130px;*/
+    overflow:hidden;
+    
+}
+.nav dt {
+	text-align:center;
+    display:block;
+    width:170px;
+    /**padding-left:40px;**/
+    height:40px;
+    line-height:40px;
+    color:ghostwhite;
+    background:#4fb2be;
+    cursor:pointer;
+    
+}
+.nav dt:hover{
+    /**color:black;**/
+   	font-size: 20px;
+}
+.nav dd {
+    display:block;
+    font-size:16px;
+    color:ghostwhite;
+    margin-top:0px;
+    height:40px;
+    line-height:40px;
+    border:none;
+    padding-right: 15px;
+    cursor: pointer;
+    text-align: right;
+    display: none;
+    /**background: inherit;
+    background: url("../SOURCE/images/indicate_red.png") no-repeat center right;**/
+}
+
+.nav dd:link,
+.nav dd:visited,
+.nav dd:hover,
+.nav dd:active {
+	/**color:#bcbe83;**/
+	padding-right: 20px;
+}
+
+
+

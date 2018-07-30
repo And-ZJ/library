@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>借阅历史</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/mydataTable.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/jquery.dataTables.css" rel="stylesheet">
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var administratorAccountName = decodeURI(GetQueryString("operate_account_name"));
+			
+			var regNumber = new RegExp("^[0-9]*$");
+			
+			var table = jQuery("#edit_borrow_history_table").DataTable({
+				"ajax":{ 
+					"type":"post",
+					"url":"searchBorrowHistoryAction", 
+					"data":{
+						"mode"        : "nothing",
+						"search_words": ""
+					},
+					"error":function(jQXHR){alert("错误码:" + jQXHR.status);}
+				},
+				"columns": [
+					{ "data": "historyId", "title": "数据库编号" },
+					{ "data": "bookIsbn", "title": "所借书籍ISBN" },
+			   		{ "data": "accountName","title": "借阅人帐号" },
+			       	{ "data": "borrowTime","title": "历史借阅时间" },  
+			       	{ "data": "returnTime","title": "实际归还时间" }, 
+			       	{ "data": "historyNotes","title": "备注" },   
+			       	{ "data": null,"title":"修改备注","defaultContent": "<input type='text' id='input_notes' class='input_notes' size='10' maxlength='30'><button id='add_notes_btn' class='add_notes_btn' type='button'>添加</button>"}
+				],
+				"language": {
+			    	"sProcessing": "处理中...",
+			    	"sLengthMenu": "每页显示数量  _MENU_ ",
+			    	"sZeroRecords": "没有匹配结果",
+			        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+			        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+			        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+			        "sInfoPostFix": "",
+			        "sSearch": "在结果中过滤:", 
+			        "sUrl": "",
+			        "sEmptyTable": "表中数据为空",
+			        "sLoadingRecords": "表中数据为空",
+			        "sInfoThousands": ",",
+			        "oPaginate": {
+			        	"sFirst": "首页",
+			             "sPrevious": "上页",
+			             "sNext": "下页",
+			            "sLast": "末页"
+			        },
+			        "oAria": {
+			            "sSortAscending": ": 以升序排列此列",
+			            "sSortDescending": ": 以降序排列此列"
+			        }
+				},
+			    "bFilter": true //开关，是否启用客户端过滤器 
+			});
+
+			jQuery("#edit_borrow_history_table tbody").on("click",".add_notes_btn",function(){
+				var newNotes = jQuery(this).parents("tr").children("td:eq(6)").children(".input_notes").val();
+				//alert("修改2:" + newNotes);
+				if (newNotes == "")
+				{
+					if (!confirm("内容框中未输入字符,点击确认将清空之前的备注"))
+					{
+						return; 
+					}
+				}
+				var historyId = jQuery(this).parents("tr").children("td:eq(0)").text();
+				
+				jQuery.ajax({
+					type:"POST",
+					url:"updateBorrowHistoryAction",
+					data:{
+						"history_id":historyId,
+						"history_notes":newNotes
+					},
+					success:function(data){
+						if (data.info == "UpdateSuccess")
+						{
+							alert("修改完成,请刷新页面");
+							
+						}
+						else if (data.info == "UpdateError")
+						{
+							alert("修改出错");
+						}
+						else
+						{
+							alert("返回信息出错:"+data.info);
+						}
+					},
+					error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+				});
+			});
+			
+			jQuery("#search_btn").click(function(){
+				var searchWords = jQuery("#search_input").val();
+				if (searchWords == "")
+				{
+					alert("输入框为空"); 
+					return;
+				}
+				else if (!regNumber.test(searchWords))
+				{
+					alert("请输入纯数字");
+					return;
+				}
+				var mode = jQuery("#mode_select option:selected").val();
+				var param = {
+						"mode":mode,
+						"search_words":searchWords
+				    };
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+			});
+			
+			jQuery("#search_all_btn").click(function(){
+				var param = {
+						"mode":"all",
+						"search_words":""
+				    };
+				table.settings()[0].ajax.data = param;
+				table.ajax.reload();
+			});
+			
+			jQuery("#clear_input").click(function(){
+				jQuery("#search_input").val("");
+			});
+			
+			
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+		<button id="search_all_btn">展开所有历史借阅记录</button>&nbsp;&nbsp;&nbsp;
+		<select id="mode_select">
+  				<option value="account">查询某账号的历史借阅记录,输入帐号名:</option>
+				<option value="isbn">查询某书的历史借阅记录,输入图书ISBN:</option>
+		</select>&nbsp;
+		<input id="search_input" type="text" size="22" maxlength="20">&nbsp;
+		<button id="search_btn">查询</button>&nbsp;<button id="clear_input">清空输入框</button>
+	</div>
+	<div style="background-color: #f63e74;width: 100%;height: 2px;margin:3px;"></div>
+	<div align="center">
+		<table id="edit_borrow_history_table" class="display">
+		</table>
+	</div>
+</body>
+</html>

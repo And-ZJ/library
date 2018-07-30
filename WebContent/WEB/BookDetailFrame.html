@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>图书详细信息</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/hint.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/BookDetail.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/mydataTable.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/jquery.dataTables.css" rel="stylesheet" >
+	<link media="screen" type="text/css" href="CSS/detail_table.css" rel="stylesheet">
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.dataTables.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var administratorAccount = decodeURI(GetQueryString("operate_account_name"));
+			
+			var bookIsbn = decodeURI(GetQueryString("book_isbn"));
+			//alert("bookIsbn=" + bookIsbn );
+			if (bookIsbn == null)
+			{
+				alert("地址出现了问题,请返回重试");
+			}
+			else
+			{
+				jQuery.ajax({
+		   	        type: "POST",
+		   	        url: "searchBookAction",
+		   	        data:{
+		   	        	"mode":"isbn",
+		   	        	"search_words":bookIsbn
+					},
+		   	        success:function(data){
+			   	        	if (data.info == "Match" )
+			   	        	{
+			   	        		var bookImageAddress = data.data[0].bookImageAddress
+			   	        		if (bookImageAddress && typeof bookImageAddress != "undefined")
+			   	        		{
+			   	        			jQuery("img#book_image").attr("src",getFileServerAddress() + bookImageAddress);
+			   	        		}
+			   	        		jQuery("span#book_isbn").text(data.data[0].bookIsbn);
+			   	        		jQuery("span#book_name").text(data.data[0].bookName);
+			   	        		jQuery("span#book_author").text(data.data[0].bookAuthor);
+			   	        		jQuery("span#book_price").text(data.data[0].bookPrice);
+			   	        		jQuery("span#book_publish_company").text(data.data[0].bookPublishCompany);
+			   	        		jQuery("span#book_publish_time").text(data.data[0].bookPublishTime);
+			   	        		jQuery("span#book_summary").text(data.data[0].bookSummary);
+			   	        		jQuery("span#book_total_number").text(data.data[0].bookTotalNumber);
+			   	        		jQuery("span#book_remain_number").text(data.data[0].bookRemainNumber);
+			   	        		jQuery("span#book_average_score").text(data.data[0].bookAverageScore);
+								jQuery("span#book_score_number").text(data.data[0].bookScoreNumber);
+			   	        		jQuery("span#book_position").text(data.data[0].bookPosition);
+			   	        		jQuery("span#book_key_words").text(data.data[0].bookKeyWords);
+			   	        		jQuery("span#book_notes").text(data.data[0].bookNotes);
+			   	        		jQuery("span#operate_account_name").text(data.data[0].operateAccountName);
+			   	        		jQuery("span#operate_time").text(data.data[0].operateTime);
+			   	        	}
+			   	        	else if (data.info == "NotMatch")
+			   	        	{
+			   	        		alert("抱歉,没有找到这本书.");
+			   	        	}
+			   	        	else
+			   	        	{
+			   	        		alert("返回信息出错:" + data.info );
+			   	        	}
+			   	        },
+		   	        error:function(jQXHR){alert("查询失败,错误码:" + jQXHR.status);}
+				});
+			}
+			
+			jQuery("#expand_comment").click(function(){
+				var table_comment = jQuery("#edit_comment_table").DataTable({
+					"ajax":{ 
+						"type":"post",
+						"url":"searchCommentAction",  
+						"data":{
+							"mode"        : "isbn",
+							"search_words": jQuery("#book_isbn").text()
+						},
+						"error":function(jQXHR){alert("错误码:" + jQXHR.status);}
+					},
+					"columns": [
+						{ "data": "commentId", "title": "数据库编号" },
+						{ "data": "bookIsbn", "title": "所评书籍ISBN" },
+				   		{ "data": "commentAccountName","title": "评论人帐号" },
+				       	{ "data": "commentContent","title": "评论内容" },  
+				       	{ "data": "commentTime","title": "评论时间" }, 
+				       	{ "data": null,"title":"操作","defaultContent": "<button id='delete_comment_btn' class='delete_comment_btn' type='button'>删除</button>"}
+					],
+					"language": {
+				    	"sProcessing": "处理中...", 
+				    	"sLengthMenu": "每页显示数量  _MENU_ ",
+				    	"sZeroRecords": "没有匹配结果",
+				        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+				        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项", 
+				        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+				        "sInfoPostFix": "",
+				        "sSearch": "在结果中过滤:", 
+				        "sUrl": "",
+				        "sEmptyTable": "表中数据为空",
+				        "sLoadingRecords": "表中数据为空",
+				        "sInfoThousands": ",",
+				        "oPaginate": {
+				        	"sFirst": "首页",
+				             "sPrevious": "上页",
+				             "sNext": "下页",
+				            "sLast": "末页"
+				        },
+				        "oAria": {
+				            "sSortAscending": ": 以升序排列此列",
+				            "sSortDescending": ": 以降序排列此列"
+				        }
+					},
+					"bDestroy": true,
+					"bProcessing" : true,
+				    "bFilter": true //开关，是否启用客户端过滤器 
+				});
+				
+				jQuery("#edit_comment_table tbody").on("click",".delete_comment_btn",function(){
+					//alert("删除"); 
+					if (!confirm("确认删除吗?")) 
+					{
+						return;
+					}
+					var deleteCommentId = jQuery(this).parents("tr").children("td:eq(0)").text();
+					//alert("deleteID:"+deleteCommentId);
+					
+					jQuery.ajax({
+						type:"POST",
+						url:"deleteCommentAction",
+						data:{
+							"comment_id":deleteCommentId
+						},
+						success:function(data){
+							if (data.info == "DeleteSuccess")
+							{
+								alert("删除完成");//删除完成后,reload更好
+							}
+							else if (data.info == "DeleteError")
+							{
+								alert("删除出错");
+							}
+							else
+							{
+								alert("执行删除操作时出错");
+							}
+						},
+						error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+					});
+				});
+			});
+			 
+			jQuery("#expand_borrow").click(function(){
+				var table_borrow = jQuery("#edit_borrow_table").DataTable({
+					"ajax":{ 
+						"type":"post",
+						"url":"searchBorrowAction", 
+						"data":{
+							"mode"        : "isbn",
+							"search_words": jQuery("#book_isbn").text()
+						},
+						"error":function(jQXHR){alert("错误码:" + jQXHR.status);}
+					},
+					"columns": [
+						{ "data": "borrowId", "title": "数据库编号" },
+						{ "data": "bookIsbn", "title": "所借书籍ISBN" },
+				   		{ "data": "borrowAccountName","title": "借阅人帐号" },
+				       	{ "data": "borrowTime","title": "借阅时间" },  
+				       	{ "data": "returnTime","title": "归还时间" }, 
+				       	{ "data": "borrowState","title": "借阅状态" }, 
+				       	{ "data": null,"title":"操作","defaultContent": "<button id='update_borrow_btn' class='update_borrow_btn' type='button'>修改</button><button id='delete_borrow_btn' class='delete_borrow_btn' type='button'>删除</button>"}
+					],
+					"language": {
+				    	"sProcessing": "处理中...",
+				    	"sLengthMenu": "每页显示数量  _MENU_ ",
+				    	"sZeroRecords": "没有匹配结果",
+				        "sInfo": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+				        "sInfoEmpty": "显示第 0 至 0 项结果，共 0 项",
+				        "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
+				        "sInfoPostFix": "",
+				        "sSearch": "在结果中过滤:", 
+				        "sUrl": "",
+				        "sEmptyTable": "表中数据为空",
+				        "sLoadingRecords": "表中数据为空",
+				        "sInfoThousands": ",",
+				        "oPaginate": {
+				        	"sFirst": "首页",
+				             "sPrevious": "上页",
+				             "sNext": "下页",
+				            "sLast": "末页"
+				        },
+				        "oAria": {
+				            "sSortAscending": ": 以升序排列此列",
+				            "sSortDescending": ": 以降序排列此列"
+				        }
+					},
+					"bDestroy": true,
+					"bProcessing" : true,
+				    "bFilter": true //开关，是否启用客户端过滤器 
+				});
+				
+				jQuery("#edit_borrow_table tbody").on("click",".update_borrow_btn",function(){
+					var borrowId = jQuery(this).parents("tr").children("td:eq(0)").text();
+					
+					window.location.href = "UpdateBorrowFrame.html?operate_account_name=" + administratorAccountName +"&borrow_id=" + borrowId; 
+				});
+				
+				jQuery("#edit_borrow_table tbody").on("click",".delete_borrow_btn",function(){
+					if (!confirm("确认删除吗?"))
+					{
+						return; 
+					}
+					var borrowId = jQuery(this).parents("tr").children("td:eq(0)").text();
+					//alert("borrowId:"+borrowId);
+					jQuery.ajax({
+						type:"POST",
+						url:"deleteBorrowAction",
+						data:{
+							"borrow_id":borrowId
+						},
+						success:function(data){
+							if (data.info == "DeleteSuccess")
+							{
+								alert("删除完成");//reload操作更好 
+								//window.location.href = "EditBorrowFrame.html?operate_account_name=" + administratorAccountName;
+							}
+							else if (data.info == "DeleteError")
+							{
+								alert("删除出错");
+							}
+							else
+							{
+								alert("执行删除操作时出错");
+							}
+						},
+						error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+					});
+				});
+			});
+			
+			jQuery("#delete_book").click(function(){
+				if (!confirm("确认删除吗?"))
+				{
+					return;
+				}
+				
+				var delteBookIsbn = jQuery("#book_isbn").text();
+				
+				jQuery.ajax({
+					type:"POST",
+					url:"deleteBookAction",
+					data:{
+						"book_isbn":delteBookIsbn
+					},
+					success:function(data){
+						if (data.info == "DeleteSuccess")
+						{
+							alert("删除完成,点击确定将自动返回上一页");
+							window.history.back();
+						}
+						else if (data.info == "DeleteError")
+						{ 
+							alert("删除出错");
+						}
+						else if (data.info == "BookNotExisted")
+						{
+							alert("此书不存在");
+						}
+						else
+						{
+							alert("执行删除操作时出错");
+						}
+					},
+					error:function(jQXHR){alert("错误码:" + jQXHR.status);}
+				});
+			});
+			
+			jQuery("#update_book").click(function(){
+				var updateBookIsbn = jQuery("#book_isbn").text();
+				
+				window.location.href = "UpdateBookFrame.html?operate_account_name=" + administratorAccount +"&book_isbn=" + updateBookIsbn;
+			});
+			
+			jQuery("#add_borrow").click(function(){
+				jQuery("iframe#add_borrow_frame").show();
+				jQuery("iframe#add_borrow_frame").attr('src', "AddBorrowFrame.html?operate_account_name=" + administratorAccount);
+				
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div align="center">
+	<table id="book_detail_table" class="detail">
+		<caption>图书详细信息</caption>
+		<tr>
+			<th>封面</th>
+			<td><img id="book_image" alt="图片加载失败" src="SOURCE/no_book_image.png"></td>
+		</tr>
+		<tr>
+			<th>ISBN</th>
+			<td><span id="book_isbn"></span></td>
+		</tr>
+		<tr>
+			<th>书名</th>
+			<td><span id="book_name"></span></td>
+		</tr>	
+		<tr>
+			<th>作者</th>
+			<td><span id="book_author"></span></td>
+		</tr>
+		<tr>
+			<th>价格</th>
+			<td><span id="book_price"></span></td>
+		</tr>
+		<tr>
+			<th>出版社</th>
+			<td><span id="book_publish_company"></span></td>
+		</tr>
+		<tr>
+			<th>出版时间</th>
+			<td><span id="book_publish_time"></span></td>
+		</tr>
+		<tr>
+			<th>简介</th>
+			<td><span id="book_summary"></span></td>
+		</tr>
+		<tr>
+			<th>总数量</th>
+			<td><span id="book_total_number"></span></td>
+		</tr>
+		<tr>
+			<th>不可借数量</th>
+			<td><span id="book_remain_number"></span></td>
+		</tr>
+		<tr>
+			<th>评分</th>
+			<td><span id="book_average_score"></span></td>
+		</tr>
+		<tr> 
+			<th>评分人数</th>
+			<td><span id="book_score_number"></span></td>
+		</tr>
+		<tr>
+			<th>存放位置</th>
+			<td><span id="book_position"></span></td>
+		</tr>
+		<tr>
+			<th>关键字</th>
+			<td><span id="book_key_words"></span></td>
+		</tr>
+		<tr>
+			<th>备注</th>
+			<td><span id="book_notes"></span></td>
+		</tr>
+		<tr>
+			<th>操作人</th>
+			<td><span id="operate_account_name"></span></td>
+		</tr>
+		<tr>
+			<th>操作时间</th>
+			<td><span id="operate_time"></span></td>
+		</tr>
+
+	</table>
+	</div>
+	<div align="center">
+		<button id="update_book" class="button">修改图书信息</button>
+		<button id="delete_book" class="button">删除图书信息</button>
+		<button id="add_borrow" class="button">增加一条借阅记录</button>
+		<button id="page_back" onclick="javascript:window.close();" class="button">关闭本窗口</button>
+	</div>
+	<div align="center">
+		<iframe id="add_borrow_frame" src="" hidden="true" style="height: 190px;width: 400px;"></iframe>
+	</div>
+	<div align="center" id="book_comment" >
+		<div id="expand_comment" class="button">展开图书评论</div><br>
+		<div>
+			<table id="edit_comment_table" class="display"></table>
+		</div>
+	</div>
+	<div align="center" id="book_borrow">
+		<div id="expand_borrow" class="button">展开借阅情况</div><br>
+		<div>
+			<table id="edit_borrow_table" class="display"></table>
+		</div>
+	</div>
+</body>
+</html>

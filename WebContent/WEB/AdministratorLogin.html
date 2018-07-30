@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理员登录</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+<script type="text/javascript" src="../JS/getParameter.js" ></script>
+<script type="text/javascript" src="../JS/myConfigure.js"></script>
+<script type="text/javascript">
+	jQuery(document).ready(function(){
+		jQuery("#administrator_login_btn").click(function(){
+			if (jQuery("#account_name").val() == "")
+			{
+				alert("请输入帐号!");
+			}
+			else if (jQuery("#password").val() == "")
+			{
+				alert("请输入密码!");
+			}
+			else
+			{
+				jQuery.ajax({
+		   	        type: "POST",
+		   	        url: "administratorLoginAction",
+		   	        data:{
+		   	        	"account_name":jQuery("#account_name").val(),
+		   	       	 	"password":jQuery("#password").val()
+		   	       	 	},
+		   	       	success: function (data){
+		   	       		if (data.info != null)
+		   	       		{
+			   	       		if(data.info == "LoginSuccess")
+			   	    		{
+			   	       			//alert("登录成功！");
+			   	    			var accountName = data.data.accountName;
+			   	    			var nickname = data.data.administratorNickname;
+			   	    			//alert(accountName + " " + nickname);
+			   	    			window.location.href = 'AdministratorManage.html?account_name=' + accountName + "&nickname=" + nickname;
+			   	    		}
+			   	    		else if(data.info=="AccountNotExisted")
+			   	        	{
+			   	        		alert("账户不存在！");
+			   	        		window.location.href = '#';
+			   	        	}
+			   	    		else if(data.info=="PasswordWrong")
+			   	        	{
+			   	        		alert("密码错误！");
+			   	        		window.location.href = '#';
+			   	        	}
+			   	    		else
+			   	    		{
+			   	    			alert("登录过程出错,请刷新网页");
+			   	    		}
+		   	       		}
+		   	       		else
+		   	       		{
+		   	       			alert("返回异常，即将自动刷新网页!");
+		   	       			window.location.href = '#';
+		   	       		}
+		   	        },
+		   			error: function(jQXHR){
+		   	        	alert("请求错误，即将自动刷新网页!错误码:" + jQXHR.status);
+		   	        	window.location.href = '#';
+		   	    	}    
+		   		});			
+			}
+		});
+	});
+
+</script>
+</head>
+<body>
+<div align="center">
+	<table>
+		<caption>管理员登录</caption>
+		<tr>
+			<th>请输入管理员帐号:</th>
+			<td><input id="account_name"  name="administratorAccount" type="text" /></td>
+		</tr>
+		<tr>
+			<th>请输入密码:</th>
+			<td><input id="password" name="administratorPassword" type="password"/></td>
+		</tr>
+	</table>
+	<div align="center"> 
+		<button id="administrator_login_btn" class="loginButton" >点击登录</button>
+		<div id="hint"></div>	
+	</div>
+</div>
+	
+</body>
+</html>

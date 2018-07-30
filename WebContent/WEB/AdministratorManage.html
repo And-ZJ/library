@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>管理</title>
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">
+	<link media="screen" type="text/css" href="CSS/AdministratorManage.css" rel="stylesheet" ></link>
+	<link media="screen" type="text/css" href="CSS/nav.css" rel="stylesheet"></link>
+	<link media="screen" type="text/css" href="CSS/mydataTable.css" rel="stylesheet"></link>
+	<script type="text/javascript" src="../JS/jquery-1.8.2.min.js" ></script>
+	<script type="text/javascript" src="../JS/jquery.wysiwyg.js" ></script>
+	<script type="text/javascript" src="../JS/getParameter.js" ></script>
+	<script type="text/javascript" src="../JS/util.js" ></script>
+	<script type="text/javascript" src="../JS/myConfigure.js"></script>
+	<script type="text/javascript">
+		function showSystemTime(){
+		var timeStr = getSystemTimeStr();
+		jQuery("span#current_time").text(timeStr);
+	}
+	</script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var administratorAccountName = decodeURI(GetQueryString("account_name"));
+			var administratorNickname = decodeURI(GetQueryString("nickname"));
+			
+			//alert(administratorNickname);
+			jQuery("#admin_account_name").text(administratorNickname);
+			
+			window.setInterval("showSystemTime()", 1000);
+			
+			function loadIframe(url){
+				jQuery("iframe#frame_box").attr('src', url+ "?operate_account_name=" + administratorAccountName);
+			}
+			
+			
+			jQuery("#admin_account_href").click(function(){
+				jQuery("iframe#frame_box").attr('src', "AdminAccountDetailFrame.html?operate_account_name=" + administratorAccountName +"&account_name=" + administratorAccountName);
+			});
+			
+			//loadIframe("welcom.html");
+			 
+			//跳转至图书管理相关界面
+			jQuery("#add_book").click(function(){
+				loadIframe("AddBookFrame.html");
+			});
+			
+			jQuery("#edit_book").click(function(){
+				loadIframe("EditBookFrame.html");
+			});
+			
+			//跳转至管理员相关界面
+			jQuery("#register_admin_account").click(function(){
+				loadIframe("AddAdministratorAccountFrame.html");
+			});
+			
+			jQuery("#edit_admin_account").click(function(){
+				loadIframe("EditAdminAccountFrame.html");
+			});
+			
+			//跳转至用户相关界面
+			jQuery("#register_user_account").click(function(){
+				loadIframe("AddUserAccountFrame.html");
+			});
+			
+			jQuery("#edit_user_account").click(function(){
+				loadIframe("EditUserAccountFrame.html");
+			});
+			
+			//跳转至借阅相关界面
+			jQuery("#add_borrow_record").click(function(){
+				loadIframe("AddBorrowFrame.html");
+			});
+			
+			jQuery("#edit_borrow_record").click(function(){
+				loadIframe("EditBorrowFrame.html");
+			});
+			
+			//跳转至评论相关界面
+			/**
+			jQuery("#add_comment").click(function(){
+				loadIframe("AddComment.html");
+			});
+			**/
+			
+			jQuery("#add_commment_score").click(function(){
+				loadIframe("AddCommentScoreFrame.html");
+			});
+			
+			
+			jQuery("#edit_comment_record").click(function(){
+				loadIframe("EditCommentFrame.html");
+			});
+			
+			
+			/**
+			jQuery("#add_score_record").click(function(){
+				loadIframe("AddScoreFrame.html");
+			});
+			**/
+			
+			
+			jQuery("#edit_borrow_history_record").click(function(){
+				loadIframe("EditBorrowHistoryFrame.html");
+			});
+			
+			
+			jQuery("dd#add_book").slideDown("slow");
+			jQuery("dd#edit_book").slideDown("slow");
+
+			jQuery("dt").click(function(){
+				jQuery("dt").css("color","ghostwhite");
+				jQuery("dd").slideUp("slow");
+				jQuery(this).parents("dl").children("dd").slideDown("slow");
+				jQuery(this).css("color","black");
+			});
+			
+			jQuery("dd").click(function(){
+				jQuery("dd").css("background","inherit");
+				
+				jQuery(this).css("background",'url("SOURCE/images/indicate_white_big.png") no-repeat center right');
+				//alert("click");
+				//jQuery(this).css("background","red");
+				//jQuery(this).css({"background-image":"url(\"indicate_red.png\") no-repeat center right"});
+				
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<div id="body">
+		<div id="top">
+		<span id="web_title">小型图书馆管理系统</span>
+			<span id="welcom">欢迎您: <a id="admin_account_href" href="#"><span id="admin_account_name" style="font-size: 22px;"></span></a>&nbsp;&nbsp;&nbsp;
+			<a href="AdministratorLogin.html">退出登录</a></span>
+			<span id="system_time">当前时间:<span id="current_time"></span></span>
+		</div>
+		
+		<div id="left">
+		<img id="logo_img" alt="图片加载失败" src="SOURCE/images/logo_img.png">
+			<div id="side_bar" class="nav">
+			    <dl>
+			        <dt id="book_manage" class="big">图书管理 </dt>
+			        <dd id="add_book">添加图书入库</dd>
+			        <dd id="edit_book">管理库中图书</dd>
+			    </dl>
+			    <dl>
+			        <dt id="user_manage" class="big"> 用户账号管理 </dt>
+			        <dd id="register_user_account">注册用户账号</dd>
+			        <dd id="edit_user_account">管理已有账号</dd>
+			    </dl>
+			    <dl>
+			        <dt id="admin_manage" class="big">管理员账号管理 </dt>
+			        <dd id="register_admin_account">添加管理员账号</dd>
+			        <dd id="edit_admin_account">管理已有账号</dd>
+			    </dl>
+			    <dl>
+			        <dt id="borrow_manage" class="big">借阅信息管理</dt>
+			        <dd id="add_borrow_record">增加一条借阅记录</dd>
+			        <dd id="edit_borrow_record">管理已有借阅记录</dd>
+			        <dd id="edit_borrow_history_record">查看历史借阅纪录</dd>
+			    </dl>
+			    <dl>
+			        <dt id="comment_manage" class="big">评论信息管理 </dt>
+			        <!--  <dd id="add_comment">添加一条评论</dd> -->
+			        <!--  <dd id="add_score_record">添加一条评分</dd> -->
+			        <dd id="add_commment_score" >添加评论</dd>
+			        <dd id="edit_comment_record">管理已有评论记录</dd>
+			    </dl>
+			    <dl>
+			        <dt id="help" class="big">帮助</dt>
+			        <dd id="about_web">关于</dd>
+			        <dd id="help_web">帮助</dd>
+			    </dl>
+		
+			 </div>
+		</div>
+		
+		<div id="right">
+				<iframe id="frame_box" src="">
+				</iframe>
+		</div>
+	</div>
+</body>
+	
+</html>
